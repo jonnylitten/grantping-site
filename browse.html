@@ -162,7 +162,7 @@
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section-title">Account</div>
-            <a href="#" class="settings-link" id="editPrefsLink">Edit Preferences</a>
+            <a href="/signup.html" class="settings-link" id="editPrefsLink">Edit Preferences</a>
             <a href="/" class="settings-link">← Back to Home</a>
         </aside>
 
@@ -241,10 +241,14 @@
                 const goodFor = Array.isArray(grant.good_for) ?
                     grant.good_for.join(', ') : grant.good_for || '';
 
+                const title = grant.friendly_title || grant.opportunity_title;
+                const grantUrl = grant.opportunity_number ?
+                    `https://grants.gov/search-results-detail/${grant.opportunity_number}` : 'https://grants.gov';
+
                 return `
                     <div class="grant-card">
                         <div class="card-header">
-                            <div class="card-title">${grant.opportunity_title}</div>
+                            <a href="${grantUrl}" target="_blank" class="card-title" style="text-decoration: none;">${title}</a>
                         </div>
                         <div class="card-badges">
                             ${compBadge}
