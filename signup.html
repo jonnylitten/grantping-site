@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Set Your Preferences - GrantPing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            padding: 40px 20px;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 32px; }
+        .header h1 { color: #1e3a5f; margin-bottom: 8px; }
+        .header p { color: #666; }
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .form-section { margin-bottom: 24px; }
+        .form-section h3 {
+            color: #1e3a5f;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #2d5a87;
+        }
+        .feed-list { display: flex; flex-direction: column; gap: 8px; }
+        .feed-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .feed-item:hover { border-color: #2d5a87; background: #fafafa; }
+        .feed-item.selected { border-color: #155724; background: #d4edda; }
+        .feed-item input { width: 18px; height: 18px; accent-color: #155724; }
+        .feed-item span { font-size: 0.95rem; }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .success-message h2 { color: #155724; margin-bottom: 12px; }
+        .success-message p { color: #666; margin-bottom: 8px; }
+        .hint { font-size: 0.85rem; color: #888; margin-top: 16px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GrantPing</h1>
+            <p>Choose which grant categories you want to track</p>
+        </div>
+
+        <div class="form-card" id="formCard">
+            <form id="signupForm">
+                <div class="form-section">
+                    <h3>Your Email</h3>
+                    <input type="email" name="email" id="email" placeholder="you@organization.org" required>
+                </div>
+
+                <div class="form-section">
+                    <h3>Select Grant Categories</h3>
+                    <div class="feed-list">
+                        <label class="feed-item"><input type="checkbox" name="categories" value="health-hhs"><span>Health (HHS/NIH)</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="education-dept"><span>Education</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="science-research"><span>Science & Research (NSF)</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="energy"><span>Energy</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="environment-epa"><span>Environment (EPA)</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="defense-security"><span>Defense & Security</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="housing-community"><span>Housing & Community Development</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="economic-development"><span>Economic Development</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="arts-culture"><span>Arts & Culture</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="public-safety"><span>Public Safety & Justice</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="agriculture-food"><span>Agriculture & Food</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="transportation"><span>Transportation</span></label>
+                        <label class="feed-item"><input type="checkbox" name="categories" value="other"><span>Other Grants</span></label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Delivery Preferences</h3>
+                    <div class="feed-list">
+                        <label class="feed-item"><input type="checkbox" name="delivery" value="instant" id="wantsInstant" checked><span>Instant alerts (when new grants match)</span></label>
+                        <label class="feed-item"><input type="checkbox" name="delivery" value="daily" id="wantsDaily"><span>Daily digest (8am ET)</span></label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Start Receiving Alerts</button>
+                <p class="hint">Select at least one category and delivery method.</p>
+            </form>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h2>You're all set!</h2>
+            <p>We'll alert you when grants in your categories are posted.</p>
+            <p><a href="browse.html" style="color: #2d5a87;">Browse current grants</a></p>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const editToken = urlParams.get('token');
+        const signupToken = urlParams.get('signup');
+
+        const API_BASE = 'http://localhost:8080';  // Change to Railway URL when deployed
+
+        // If no token at all, show "check your email" message
+        if (!editToken && !signupToken) {
+            document.getElementById('formCard').innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <h2 style="color: #1e3a5f; margin-bottom: 16px;">Check Your Email</h2>
+                    <p style="color: #666; margin-bottom: 24px;">
+                        After completing checkout, you'll receive an email with a link to set up your alert preferences.
+                    </p>
+                    <p style="color: #888; font-size: 14px;">
+                        Already subscribed? Check your inbox for a previous email from GrantPing containing your preferences link.
+                    </p>
+                    <a href="/" style="display: inline-block; margin-top: 24px; color: #2d5a87;">← Back to home</a>
+                </div>
+            `;
+        }
+
+        // New signup from Stripe - validate token first
+        if (signupToken) {
+            fetch(`${API_BASE}/api/signup-token/${signupToken}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.valid) {
+                        document.getElementById('formCard').innerHTML = `
+                            <div style="text-align: center; padding: 40px 20px;">
+                                <h2 style="color: #dc3545; margin-bottom: 16px;">Invalid or Expired Link</h2>
+                                <p style="color: #666; margin-bottom: 24px;">
+                                    ${data.error || 'This signup link is no longer valid.'}
+                                </p>
+                                <p style="color: #888; font-size: 14px;">
+                                    Please check your email for a more recent link, or contact hello@grantping.co for help.
+                                </p>
+                                <a href="/" style="display: inline-block; margin-top: 24px; color: #2d5a87;">← Back to home</a>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    const emailInput = document.getElementById('email');
+                    emailInput.value = data.email;
+                    emailInput.readOnly = true;
+                    emailInput.style.background = '#f5f5f5';
+                });
+        }
+
+        // Editing existing preferences
+        if (editToken) {
+            fetch(`${API_BASE}/api/preferences/${editToken}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) return;
+
+                    document.querySelector('.header h1').textContent = 'Edit Preferences';
+                    document.querySelector('.header p').textContent = 'Update which categories you receive';
+                    document.getElementById('submitBtn').textContent = 'Save Changes';
+
+                    const emailInput = document.getElementById('email');
+                    emailInput.value = data.email;
+                    emailInput.readOnly = true;
+                    emailInput.style.background = '#f5f5f5';
+
+                    (data.categories || []).forEach(cat => {
+                        const cb = document.querySelector(`input[name="categories"][value="${cat}"]`);
+                        if (cb) {
+                            cb.checked = true;
+                            cb.closest('.feed-item').classList.add('selected');
+                        }
+                    });
+
+                    // Load delivery preferences
+                    document.getElementById('wantsInstant').checked = data.wants_instant !== false;
+                    document.getElementById('wantsDaily').checked = data.wants_daily === true;
+                    document.querySelectorAll('input[name="delivery"]').forEach(cb => {
+                        cb.closest('.feed-item').classList.toggle('selected', cb.checked);
+                    });
+                });
+        }
+
+        document.querySelectorAll('.feed-item input').forEach(cb => {
+            cb.addEventListener('change', () => {
+                cb.closest('.feed-item').classList.toggle('selected', cb.checked);
+            });
+            if (cb.checked) {
+                cb.closest('.feed-item').classList.add('selected');
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const formData = new FormData(e.target);
+            const categories = formData.getAll('categories');
+            const wantsInstant = document.getElementById('wantsInstant').checked;
+            const wantsDaily = document.getElementById('wantsDaily').checked;
+
+            if (categories.length === 0) {
+                alert('Please select at least one category');
+                btn.disabled = false;
+                btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
+                return;
+            }
+
+            if (!wantsInstant && !wantsDaily) {
+                alert('Please select at least one delivery method');
+                btn.disabled = false;
+                btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        categories: categories,
+                        wants_instant: wantsInstant,
+                        wants_daily: wantsDaily,
+                        signup_token: signupToken,
+                        edit_token: editToken
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.error || 'Failed to save preferences');
+                    btn.disabled = false;
+                    btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
+                    return;
+                }
+
+                // Save session token if provided
+                if (data.session_token) {
+                    localStorage.setItem('grantping_session', data.session_token);
+                }
+
+                // Show success message
+                document.getElementById('formCard').style.display = 'none';
+                const successMsg = document.getElementById('successMessage');
+                successMsg.style.display = 'block';
+
+                // Redirect after 2 seconds
+                setTimeout(() => {
+                    if (data.session_token) {
+                        window.location.href = `/browse.html?s=${data.session_token}`;
+                    } else {
+                        window.location.href = '/';
+                    }
+                }, 2000);
+
+            } catch (error) {
+                alert('Error saving preferences. Please try again.');
+                btn.disabled = false;
+                btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
+            }
+        });
+    </script>
+</body>
+</html>

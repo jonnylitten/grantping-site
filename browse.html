@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Browse Grants - GrantPing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        /* Layout */
+        .layout { display: flex; min-height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #1e3a5f;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .sidebar h1 { font-size: 1.5rem; margin-bottom: 24px; }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background: rgba(255,255,255,0.1); }
+        .sidebar-link.active { background: rgba(255,255,255,0.2); }
+        .sidebar-link .count { opacity: 0.7; font-size: 0.85rem; }
+        .sidebar-divider { border-top: 1px solid rgba(255,255,255,0.2); margin: 20px 0; }
+        .sidebar-section-title { font-size: 0.75rem; text-transform: uppercase; opacity: 0.6; margin-bottom: 8px; }
+        .settings-link {
+            display: block;
+            padding: 8px 12px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 6px;
+        }
+        .settings-link:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 24px;
+        }
+
+        /* Controls */
+        .controls {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .search-box:focus { outline: none; border-color: #2d5a87; }
+        .results-count { color: #888; font-size: 0.9rem; margin-top: 12px; }
+
+        /* Grant Cards */
+        .grant-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: box-shadow 0.2s;
+        }
+        .grant-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .grant-card.hidden { display: none; }
+        .card-header { margin-bottom: 12px; }
+        .card-title {
+            color: #1e3a5f;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        .card-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; }
+        .badge-low { background: #d4edda; color: #155724; }
+        .badge-medium { background: #fff3cd; color: #856404; }
+        .badge-high { background: #f8d7da; color: #721c24; }
+        .badge-funding { background: #e7f1ff; color: #0056b3; }
+        .card-meta { color: #888; font-size: 0.9rem; margin-bottom: 12px; }
+        .card-summary { color: #444; margin-bottom: 12px; line-height: 1.6; }
+        .card-goodfor { color: #666; font-size: 0.9rem; }
+        .card-goodfor strong { color: #1e3a5f; }
+
+        .loading { text-align: center; padding: 40px; color: #888; }
+        .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <h1>GrantPing</h1>
+
+            <div class="sidebar-section-title">Categories</div>
+            <a class="sidebar-link active" data-category="all">
+                <span>All Grants</span>
+                <span class="count" id="count-all">0</span>
+            </a>
+            <a class="sidebar-link" data-category="health-hhs">
+                <span>Health (HHS)</span>
+                <span class="count" id="count-health-hhs">0</span>
+            </a>
+            <a class="sidebar-link" data-category="education-dept">
+                <span>Education</span>
+                <span class="count" id="count-education-dept">0</span>
+            </a>
+            <a class="sidebar-link" data-category="science-research">
+                <span>Science & Research</span>
+                <span class="count" id="count-science-research">0</span>
+            </a>
+            <a class="sidebar-link" data-category="energy">
+                <span>Energy</span>
+                <span class="count" id="count-energy">0</span>
+            </a>
+            <a class="sidebar-link" data-category="defense-security">
+                <span>Defense & Security</span>
+                <span class="count" id="count-defense-security">0</span>
+            </a>
+            <a class="sidebar-link" data-category="environment-epa">
+                <span>Environment</span>
+                <span class="count" id="count-environment-epa">0</span>
+            </a>
+            <a class="sidebar-link" data-category="other">
+                <span>Other</span>
+                <span class="count" id="count-other">0</span>
+            </a>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section-title">Account</div>
+            <a href="#" class="settings-link" id="editPrefsLink">Edit Preferences</a>
+            <a href="/" class="settings-link">← Back to Home</a>
+        </aside>
+
+        <main class="main">
+            <div class="controls">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search grants...">
+                <div class="results-count" id="resultsCount">Loading...</div>
+            </div>
+
+            <div id="errorMessage"></div>
+            <div id="grantsContainer" class="loading">Loading grants...</div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';  // Change when deployed
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionToken = urlParams.get('s') || localStorage.getItem('grantping_session');
+
+        let allGrants = [];
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // Fetch grants from backend
+        async function loadGrants() {
+            try {
+                const response = await fetch(`${API_BASE}/api/status`);
+                const status = await response.json();
+
+                // For now, load from database directly via a simple endpoint
+                // In production, you'd fetch via /api/grants endpoint
+                displayMockGrants();  // Temporary - replace with real API call
+
+            } catch (error) {
+                document.getElementById('errorMessage').innerHTML = `
+                    <div class="error">Failed to load grants. Server may not be running.</div>
+                `;
+                document.getElementById('grantsContainer').innerHTML = '';
+            }
+        }
+
+        // Temporary mock data - replace with real API call
+        function displayMockGrants() {
+            // Simulate grants - in production this comes from /api/grants endpoint
+            const mockGrants = [
+                {
+                    opportunity_title: "NIH HEAL Initiative PainCare Clinician Training",
+                    agency_name: "National Institutes of Health",
+                    category_slug: "health-hhs",
+                    cfda_numbers: ["93.279"],
+                    estimated_total_program_funding: 5000000,
+                    close_date: "2026-03-15",
+                    summary: "This NIH grant supports training programs for healthcare clinicians in evidence-based pain management.",
+                    good_for: ["Medical schools", "Academic medical centers", "Healthcare training organizations"],
+                    competition_level: "High",
+                    funding_level: "Large"
+                },
+                {
+                    opportunity_title: "NSF Research Experiences for Teachers (RET)",
+                    agency_name: "National Science Foundation",
+                    category_slug: "science-research",
+                    cfda_numbers: ["47.070"],
+                    estimated_total_program_funding: 3500000,
+                    close_date: "2026-02-20",
+                    summary: "NSF funding to engage K-12 STEM teachers in engineering research experiences.",
+                    good_for: ["Research universities", "School districts", "STEM education nonprofits"],
+                    competition_level: "High",
+                    funding_level: "Large"
+                }
+            ];
+
+            allGrants = mockGrants;
+            renderGrants();
+            updateCategoryCounts();
+        }
+
+        function renderGrants() {
+            const container = document.getElementById('grantsContainer');
+            const filtered = allGrants.filter(g => {
+                const categoryMatch = currentCategory === 'all' || g.category_slug === currentCategory;
+                const searchMatch = !searchQuery ||
+                    g.opportunity_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    g.agency_name.toLowerCase().includes(searchQuery.toLowerCase());
+                return categoryMatch && searchMatch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="loading">No grants match your filters.</div>';
+                document.getElementById('resultsCount').textContent = '0 grants';
+                return;
+            }
+
+            document.getElementById('resultsCount').textContent = `${filtered.length} grant${filtered.length !== 1 ? 's' : ''}`;
+
+            container.innerHTML = filtered.map(grant => {
+                const compBadge = grant.competition_level ?
+                    `<span class="badge badge-${grant.competition_level.toLowerCase()}">${grant.competition_level} Competition</span>` : '';
+                const fundingBadge = grant.funding_level ?
+                    `<span class="badge badge-funding">${grant.funding_level} Grant</span>` : '';
+
+                const cfda = grant.cfda_numbers ? grant.cfda_numbers.join(', ') : 'N/A';
+                const funding = grant.estimated_total_program_funding ?
+                    `$${grant.estimated_total_program_funding.toLocaleString()}` : 'Not specified';
+
+                const goodFor = Array.isArray(grant.good_for) ?
+                    grant.good_for.join(', ') : grant.good_for || '';
+
+                return `
+                    <div class="grant-card">
+                        <div class="card-header">
+                            <div class="card-title">${grant.opportunity_title}</div>
+                        </div>
+                        <div class="card-badges">
+                            ${compBadge}
+                            ${fundingBadge}
+                        </div>
+                        <div class="card-meta">
+                            ${grant.agency_name} • CFDA: ${cfda} • Close: ${grant.close_date || 'Rolling'}
+                        </div>
+                        <div class="card-summary">
+                            ${grant.summary || 'No summary available.'}
+                        </div>
+                        ${goodFor ? `<div class="card-goodfor"><strong>Good for:</strong> ${goodFor}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCategoryCounts() {
+            const counts = {};
+            allGrants.forEach(g => {
+                const cat = g.category_slug || 'other';
+                counts[cat] = (counts[cat] || 0) + 1;
+            });
+
+            counts['all'] = allGrants.length;
+
+            Object.keys(counts).forEach(cat => {
+                const el = document.getElementById(`count-${cat}`);
+                if (el) el.textContent = counts[cat];
+            });
+        }
+
+        // Category filtering
+        document.querySelectorAll('.sidebar-link[data-category]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentCategory = link.dataset.category;
+
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                renderGrants();
+            });
+        });
+
+        // Search
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderGrants();
+        });
+
+        // Load grants on page load
+        loadGrants();
+
+        // Set edit preferences link
+        if (sessionToken) {
+            localStorage.setItem('grantping_session', sessionToken);
+        }
+    </script>
+</body>
+</html>
