@@ -302,6 +302,16 @@
         // Set edit preferences link
         if (sessionToken) {
             localStorage.setItem('grantping_session', sessionToken);
+
+            // Fetch account info to get edit token
+            fetch(`${API_BASE}/api/account?s=${sessionToken}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.edit_token) {
+                        document.getElementById('editPrefsLink').href = `/signup.html?token=${data.edit_token}`;
+                    }
+                })
+                .catch(err => console.error('Failed to load account:', err));
         }
     </script>
 </body>
