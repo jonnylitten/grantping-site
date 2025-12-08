@@ -242,8 +242,8 @@
                     grant.good_for.join(', ') : grant.good_for || '';
 
                 const title = grant.friendly_title || grant.opportunity_title;
-                const grantUrl = grant.opportunity_number ?
-                    `https://grants.gov/search-results-detail/${grant.opportunity_number}` : 'https://grants.gov';
+                const grantUrl = grant.opportunity_id ?
+                    `https://simpler.grants.gov/opportunity/${grant.opportunity_id}` : 'https://simpler.grants.gov';
 
                 return `
                     <div class="grant-card">
