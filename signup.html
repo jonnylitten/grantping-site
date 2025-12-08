@@ -137,7 +137,7 @@
         const editToken = urlParams.get('token');
         const signupToken = urlParams.get('signup');
 
-        const API_BASE = 'http://localhost:8080';  // Change to Railway URL when deployed
+        const API_BASE = 'https://grantping-production.up.railway.app';
 
         // If no token at all, show "check your email" message
         if (!editToken && !signupToken) {
