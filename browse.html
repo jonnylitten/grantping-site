@@ -189,54 +189,25 @@
         // Fetch grants from backend
         async function loadGrants() {
             try {
-                const response = await fetch(`${API_BASE}/api/status`);
-                const status = await response.json();
+                const response = await fetch(`${API_BASE}/api/grants?limit=100`);
 
-                // For now, load from database directly via a simple endpoint
-                // In production, you'd fetch via /api/grants endpoint
-                displayMockGrants();  // Temporary - replace with real API call
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                allGrants = data.grants || [];
+
+                renderGrants();
+                updateCategoryCounts();
 
             } catch (error) {
+                console.error('Failed to load grants:', error);
                 document.getElementById('errorMessage').innerHTML = `
-                    <div class="error">Failed to load grants. Server may not be running.</div>
+                    <div class="error">Failed to load grants: ${error.message}</div>
                 `;
                 document.getElementById('grantsContainer').innerHTML = '';
             }
-        }
-
-        // Temporary mock data - replace with real API call
-        function displayMockGrants() {
-            // Simulate grants - in production this comes from /api/grants endpoint
-            const mockGrants = [
-                {
-                    opportunity_title: "NIH HEAL Initiative PainCare Clinician Training",
-                    agency_name: "National Institutes of Health",
-                    category_slug: "health-hhs",
-                    cfda_numbers: ["93.279"],
-                    estimated_total_program_funding: 5000000,
-                    close_date: "2026-03-15",
-                    summary: "This NIH grant supports training programs for healthcare clinicians in evidence-based pain management.",
-                    good_for: ["Medical schools", "Academic medical centers", "Healthcare training organizations"],
-                    competition_level: "High",
-                    funding_level: "Large"
-                },
-                {
-                    opportunity_title: "NSF Research Experiences for Teachers (RET)",
-                    agency_name: "National Science Foundation",
-                    category_slug: "science-research",
-                    cfda_numbers: ["47.070"],
-                    estimated_total_program_funding: 3500000,
-                    close_date: "2026-02-20",
-                    summary: "NSF funding to engage K-12 STEM teachers in engineering research experiences.",
-                    good_for: ["Research universities", "School districts", "STEM education nonprofits"],
-                    competition_level: "High",
-                    funding_level: "Large"
-                }
-            ];
-
-            allGrants = mockGrants;
-            renderGrants();
-            updateCategoryCounts();
         }
 
         function renderGrants() {
