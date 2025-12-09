@@ -114,15 +114,49 @@
         .loading { text-align: center; padding: 40px; color: #888; }
         .error { background: #f8d7da; color: #721c24; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
 
+        /* Mobile menu */
+        .mobile-header {
+            display: none;
+            background: #1e3a5f;
+            color: white;
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+        .mobile-header h1 { font-size: 1.25rem; }
+        .mobile-menu-btn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
-            .sidebar { display: none; }
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s;
+                z-index: 300;
+            }
+            .sidebar.mobile-open { left: 0; }
             .main { margin-left: 0; }
+            .mobile-header { display: block; }
         }
     </style>
 </head>
 <body>
+    <div class="mobile-header">
+        <h1>GrantPing</h1>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
     <div class="layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <h1>GrantPing</h1>
 
             <div class="sidebar-section-title">Categories</div>
@@ -299,6 +333,11 @@
             searchQuery = e.target.value;
             renderGrants();
         });
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        }
 
         // Load grants on page load
         loadGrants();
