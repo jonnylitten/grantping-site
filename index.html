@@ -126,10 +126,10 @@
 <body>
   <section class="hero">
     <div style="position: absolute; top: 20px; right: 24px; display: flex; gap: 24px;">
-      <a href="#pricing" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Sign Up</a>
-      <a href="/login.html" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Login</a>
+      <a href="#waitlist" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Join Waitlist</a>
     </div>
     <div class="container">
+      <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 16px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 16px;">Coming Soon</div>
       <h1>GrantPing</h1>
       <p class="subtitle">Federal grant opportunities delivered to your inbox, analyzed by AI</p>
       <div class="stats">
@@ -227,27 +227,72 @@
     </div>
   </section>
 
-  <section class="pricing" id="pricing">
+  <section class="pricing" id="waitlist">
     <div class="container">
-      <h2>Start Finding Grants Today</h2>
-      <p style="color: #666; margin-bottom: 24px;">7-day free trial. Cancel anytime.</p>
-      <div class="price">$29<span>/month</span></div>
-      <p class="compare">Much cheaper than grant research services ($500-2000/year)</p>
-      <a href="#" class="cta-button" onclick="alert('Stripe checkout coming soon! Backend is ready.'); return false;">Start Free Trial</a>
-      <p class="guarantee">No contracts. Cancel anytime. Money-back guarantee.</p>
+      <h2>Join the Waitlist</h2>
+      <p style="color: #666; margin-bottom: 24px;">Be the first to know when GrantPing launches.</p>
+
+      <form id="waitlist-form" style="max-width: 400px; margin: 0 auto;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+          <input type="email" id="waitlist-email" placeholder="Enter your email" required
+            style="flex: 1; min-width: 200px; padding: 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+          <button type="submit" class="cta-button" style="margin: 0;">Join Waitlist</button>
+        </div>
+        <p id="waitlist-message" style="margin-top: 16px; display: none;"></p>
+      </form>
+
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e0e0e0;">
+        <p style="color: #888; font-size: 0.9rem;">When we launch:</p>
+        <div class="price" style="margin-top: 8px;">$29<span>/month</span></div>
+        <p class="compare">Much cheaper than grant research services ($500-2000/year)</p>
+      </div>
     </div>
   </section>
 
   <script>
-    // Redirect to app if already logged in
-    const savedSession = localStorage.getItem('grantping_session');
-    if (savedSession) {
-      window.location.href = '/browse.html?s=' + savedSession;
-    }
+    const API_BASE = 'https://grantping-production.up.railway.app';
+
+    document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      const msg = document.getElementById('waitlist-message');
+      const btn = this.querySelector('button[type="submit"]');
+
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/waitlist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          msg.textContent = data.message || "You're on the list! We'll notify you when GrantPing launches.";
+          msg.style.display = 'block';
+          msg.style.color = '#155724';
+          document.getElementById('waitlist-email').value = '';
+        } else {
+          msg.textContent = data.error || 'Something went wrong. Please try again.';
+          msg.style.display = 'block';
+          msg.style.color = '#721c24';
+        }
+      } catch (err) {
+        msg.textContent = 'Network error. Please try again.';
+        msg.style.display = 'block';
+        msg.style.color = '#721c24';
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Join Waitlist';
+    });
   </script>
 
   <footer>
-    <p><a href="/login.html" style="color: #1e3a5f;">Login</a> · Questions? Email hello@grantping.co</p>
+    <p>Questions? Email hello@grantping.co</p>
   </footer>
 </body>
 </html>
