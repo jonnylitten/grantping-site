@@ -19,14 +19,91 @@
         /* Sidebar */
         .sidebar {
             width: 280px;
-            background: #1e3a5f;
+            background: #166534;
             color: white;
             padding: 20px;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
         }
-        .sidebar h1 { font-size: 1.5rem; margin-bottom: 24px; }
+        .sidebar h1 { font-size: 1.5rem; margin-bottom: 8px; }
+
+        /* Sonar ping on the "i" dot */
+        .ping-i {
+            position: relative;
+            display: inline-block;
+        }
+        .ping-i::before,
+        .ping-i::after {
+            content: '';
+            position: absolute;
+            top: 0.12em;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0.32em;
+            height: 0.32em;
+            border-radius: 50%;
+            border: 1px solid rgba(74, 222, 128, 0.8);
+            animation: sonar-ping 3s ease-out infinite;
+        }
+        .ping-i::after {
+            animation-delay: 0.4s;
+        }
+        @keyframes sonar-ping {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            30% { transform: translateX(-50%) scale(2.5); opacity: 0; }
+            100% { transform: translateX(-50%) scale(2.5); opacity: 0; }
+        }
+
+        /* Logo dropdown */
+        .logo-dropdown {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .logo-trigger {
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        .dropdown-caret {
+            font-size: 0.8em;
+            opacity: 0.7;
+            transition: transform 0.2s;
+        }
+        .logo-dropdown:hover .dropdown-caret {
+            transform: rotate(180deg);
+        }
+        .logo-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: -12px;
+            background: rgba(22, 163, 74, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 100;
+        }
+        .logo-dropdown:hover .logo-dropdown-menu {
+            display: block;
+        }
+        .logo-dropdown-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 10px 16px;
+            opacity: 0.9;
+            transition: opacity 0.15s;
+        }
+        .logo-dropdown-menu a:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Brand colors in dropdown */
+        .govping-link { color: #93c5fd !important; }
+        .regping-link { color: #c4b5fd !important; }
         .sidebar-link {
             display: flex;
             align-items: center;
@@ -152,12 +229,18 @@
 </head>
 <body>
     <div class="mobile-header">
-        <h1>GrantPing</h1>
+        <h1>GrantP<span class="ping-i">i</span>ng 🎄</h1>
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
     </div>
     <div class="layout">
         <aside class="sidebar" id="sidebar">
-            <h1>GrantPing</h1>
+            <div class="logo-dropdown">
+                <h1 class="logo-trigger">GrantP<span class="ping-i">i</span>ng <span class="dropdown-caret">▾</span> 🎄</h1>
+                <div class="logo-dropdown-menu">
+                    <a href="https://govping.co" class="govping-link">GovP<span class="ping-i">i</span>ng</a>
+                    <a href="https://regping.co" class="regping-link">RegP<span class="ping-i">i</span>ng</a>
+                </div>
+            </div>
 
             <div class="sidebar-section-title">Categories</div>
             <a class="sidebar-link active" data-category="all">
