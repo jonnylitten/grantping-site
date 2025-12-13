@@ -237,7 +237,7 @@
         // Fetch grants from backend
         async function loadGrants() {
             try {
-                const response = await fetch(`${API_BASE}/api/grants?limit=100`);
+                const response = await fetch(`${API_BASE}/api/grants?limit=1000`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
