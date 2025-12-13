@@ -746,12 +746,15 @@
         }
 
         function handleEditPrefs(e) {
+            e.preventDefault();
             if (editToken) {
                 window.location.href = `/signup.html?token=${editToken}`;
             } else if (sessionToken) {
                 window.location.href = `/signup.html?s=${sessionToken}`;
+            } else {
+                // Not logged in - redirect to login page
+                window.location.href = '/login.html';
             }
-            e.preventDefault();
             return false;
         }
 
