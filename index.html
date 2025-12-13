@@ -182,10 +182,25 @@
             border-radius: 0.75rem;
             margin-bottom: 24px;
             box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
         }
         .search-box {
             width: 100%;
             padding: 12px 16px;
+            padding-right: 36px;
             border: 1px solid var(--border);
             border-radius: 0.5rem;
             font-size: 1rem;
@@ -193,7 +208,186 @@
             color: var(--text);
         }
         .search-box:focus { outline: none; border-color: #166534; }
-        .results-count { color: var(--text-secondary); font-size: 0.85rem; margin-top: 12px; }
+
+        /* Search Help Tooltip */
+        .search-help-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #166534;
+            font-size: 18px;
+            cursor: help;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .search-help-icon:hover { opacity: 1; }
+        .search-help-tooltip {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 32px;
+            background: var(--bg);
+            color: var(--text);
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            line-height: 1.7;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+        .search-help-icon:hover .search-help-tooltip { display: block; }
+        .search-help-tooltip code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #166534;
+        }
+
+        /* Filter Buttons */
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { background: var(--bg-secondary); border-color: #166534; }
+        .filter-btn.active { background: #166534; color: white; border-color: #166534; }
+
+        /* Competition level button colors */
+        .filter-btn[data-filter="high"] { border-color: rgba(239, 68, 68, 0.4); }
+        .filter-btn[data-filter="high"]:hover { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.6); }
+        .filter-btn[data-filter="high"].active { background: #991b1b; color: white; border-color: #991b1b; }
+
+        .filter-btn[data-filter="medium"] { border-color: rgba(249, 115, 22, 0.4); }
+        .filter-btn[data-filter="medium"]:hover { background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.6); }
+        .filter-btn[data-filter="medium"].active { background: #92400e; color: white; border-color: #92400e; }
+
+        .filter-btn[data-filter="low"] { border-color: rgba(34, 197, 94, 0.4); }
+        .filter-btn[data-filter="low"]:hover { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.6); }
+        .filter-btn[data-filter="low"].active { background: #166534; color: white; border-color: #166534; }
+
+        /* Dark mode filter buttons */
+        [data-theme="dark"] .filter-btn[data-filter="high"] { border-color: rgba(248, 113, 113, 0.4); }
+        [data-theme="dark"] .filter-btn[data-filter="high"].active { background: #991b1b; }
+        [data-theme="dark"] .filter-btn[data-filter="medium"] { border-color: rgba(251, 146, 60, 0.4); }
+        [data-theme="dark"] .filter-btn[data-filter="medium"].active { background: #92400e; }
+        [data-theme="dark"] .filter-btn[data-filter="low"] { border-color: rgba(74, 222, 128, 0.4); }
+        [data-theme="dark"] .filter-btn[data-filter="low"].active { background: #166534; }
+        @media (prefers-color-scheme: dark) {
+            [data-theme="system"] .filter-btn[data-filter="high"] { border-color: rgba(248, 113, 113, 0.4); }
+            [data-theme="system"] .filter-btn[data-filter="high"].active { background: #991b1b; }
+            [data-theme="system"] .filter-btn[data-filter="medium"] { border-color: rgba(251, 146, 60, 0.4); }
+            [data-theme="system"] .filter-btn[data-filter="medium"].active { background: #92400e; }
+            [data-theme="system"] .filter-btn[data-filter="low"] { border-color: rgba(74, 222, 128, 0.4); }
+            [data-theme="system"] .filter-btn[data-filter="low"].active { background: #166534; }
+        }
+
+        .filter-btn.saved-search { background: var(--bg-secondary); }
+        .filter-btn.saved-search.active { background: #166534; color: white; border-color: #166534; }
+        .filter-btn .delete-tag {
+            margin-left: 6px;
+            opacity: 0.6;
+            font-size: 0.7rem;
+        }
+        .filter-btn .delete-tag:hover { opacity: 1; }
+
+        .filter-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
+        .save-search-btn {
+            padding: 6px 12px;
+            border: 1px dashed var(--border);
+            background: var(--bg);
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .save-search-btn:hover {
+            border-color: #166534;
+            color: #166534;
+            background: var(--bg-secondary);
+        }
+        .save-search-btn.alert-btn {
+            border-style: solid;
+            background: var(--bg-secondary);
+        }
+        .save-search-btn.alert-btn:hover {
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+        [data-theme="dark"] .save-search-btn.alert-btn { background: #1e1e1e; }
+        @media (prefers-color-scheme: dark) {
+            [data-theme="system"] .save-search-btn.alert-btn { background: #1e1e1e; }
+        }
+
+        #savedSearches:empty { display: none; }
+        .results-count { color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Alert Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg);
+            border-radius: 0.75rem;
+            max-width: 420px;
+            width: 90%;
+            padding: 1.5rem;
+            color: var(--text);
+        }
+        .modal-content h3 { margin: 0 0 12px; }
+        .modal-description {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+        .modal-filter-summary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+        }
+        .btn-primary { background: #166534; color: white; }
+        .btn-primary:hover { background: #14532d; }
+        .btn-secondary { background: #f3f4f6; color: #374151; }
+        .btn-secondary:hover { background: #e5e7eb; }
 
         /* Grants Grid - two columns on wide screens */
         .grants-container {
@@ -368,13 +562,54 @@
 
         <main class="main">
             <div class="controls">
-                <input type="text" class="search-box" id="searchBox" placeholder="Search grants...">
-                <div class="results-count" id="resultsCount">Loading...</div>
+                <div class="controls-row">
+                    <div class="search-wrapper">
+                        <input type="text" class="search-box" id="searchBox" placeholder="Search grants...">
+                        <div class="search-help-icon">&#9432;
+                            <div class="search-help-tooltip">
+                                <strong>Search Tips:</strong><br>
+                                &bull; Type words to match all of them<br>
+                                &bull; Use <code>"exact phrase"</code> for exact match<br>
+                                &bull; Use <code>-word</code> to exclude<br>
+                                &bull; Combine filters below (multi-select)<br>
+                                &bull; Save searches as quick-access tags<br><br>
+                                <strong>Competition Levels:</strong><br>
+                                &bull; <span style="color: #991b1b;">High</span> - Many applicants expected<br>
+                                &bull; <span style="color: #92400e;">Medium</span> - Moderate competition<br>
+                                &bull; <span style="color: #166534;">Low</span> - Fewer applicants
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                        <button class="filter-btn" data-filter="low">Low Competition</button>
+                        <button class="filter-btn" data-filter="medium">Medium</button>
+                        <button class="filter-btn" data-filter="high">High Competition</button>
+                        <span id="savedSearches"></span>
+                        <button class="save-search-btn" id="saveSearchBtn" title="Save filter box text as a filter tag">+ Save filter</button>
+                    </div>
+                    <button class="save-search-btn alert-btn" id="addAlertBtn" style="margin-left: auto;" title="Save current filters as an email alert">📧 Save filters as alert</button>
+                    <span class="results-count" id="resultsCount">Loading...</span>
+                </div>
             </div>
 
             <div id="errorMessage"></div>
             <div id="grantsContainer" class="grants-container loading">Loading grants...</div>
         </main>
+    </div>
+
+    <!-- Alert Modal -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>Save Email Alert</h3>
+            <p class="modal-description">You'll receive a daily email when new grants match your current filters.</p>
+            <div class="modal-filter-summary" id="modalFilterSummary"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn btn-primary" id="modalConfirm">Save Alert</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -386,6 +621,35 @@
         let currentCategory = 'all';
         let searchQuery = '';
         let editToken = null;
+        let activeFilters = new Set(); // Multi-select filters (high, medium, low)
+        let savedSearches = JSON.parse(localStorage.getItem('grantping_saved_searches') || '[]');
+        let activeSavedSearches = new Set();
+
+        // Parse advanced search query
+        function parseSearchQuery(query) {
+            const exactPhrases = [];
+            const includeWords = [];
+            const excludeWords = [];
+
+            const quoteRegex = /"([^"]+)"/g;
+            let match;
+            while ((match = quoteRegex.exec(query)) !== null) {
+                exactPhrases.push(match[1].toLowerCase());
+            }
+
+            const remaining = query.replace(quoteRegex, '').toLowerCase();
+            const words = remaining.split(/\s+/).filter(w => w.length > 0);
+
+            words.forEach(word => {
+                if (word.startsWith('-') && word.length > 1) {
+                    excludeWords.push(word.slice(1));
+                } else if (word.length >= 2) {
+                    includeWords.push(word);
+                }
+            });
+
+            return { exactPhrases, includeWords, excludeWords };
+        }
 
         function handleEditPrefs(e) {
             if (editToken) {
@@ -429,15 +693,52 @@
             }
         }
 
+        function getFilteredGrants() {
+            return allGrants.filter(g => {
+                // Category filter
+                if (currentCategory !== 'all' && g.category_slug !== currentCategory) return false;
+
+                // Competition level filters (OR between levels)
+                const compFilters = ['high', 'medium', 'low'].filter(f => activeFilters.has(f));
+                if (compFilters.length > 0) {
+                    const level = (g.competition_level || '').toLowerCase();
+                    if (!compFilters.includes(level)) return false;
+                }
+
+                // Combine search box query with active saved searches (AND logic)
+                const allQueries = [];
+                if (searchQuery) allQueries.push(searchQuery);
+                activeSavedSearches.forEach(idx => {
+                    if (savedSearches[idx]) allQueries.push(savedSearches[idx].query);
+                });
+
+                if (allQueries.length > 0) {
+                    const searchable = [
+                        g.opportunity_title,
+                        g.friendly_title,
+                        g.agency_name,
+                        g.summary,
+                        ...(Array.isArray(g.good_for) ? g.good_for : [])
+                    ].filter(Boolean).join(' ').toLowerCase();
+
+                    for (const query of allQueries) {
+                        const { exactPhrases, includeWords, excludeWords } = parseSearchQuery(query);
+
+                        const allPhrasesMatch = exactPhrases.every(phrase => searchable.includes(phrase));
+                        const allWordsMatch = includeWords.every(word => searchable.includes(word));
+                        const noExcludesMatch = excludeWords.every(word => !searchable.includes(word));
+
+                        if (!allPhrasesMatch || !allWordsMatch || !noExcludesMatch) return false;
+                    }
+                }
+
+                return true;
+            });
+        }
+
         function renderGrants() {
             const container = document.getElementById('grantsContainer');
-            const filtered = allGrants.filter(g => {
-                const categoryMatch = currentCategory === 'all' || g.category_slug === currentCategory;
-                const searchMatch = !searchQuery ||
-                    g.opportunity_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    g.agency_name.toLowerCase().includes(searchQuery.toLowerCase());
-                return categoryMatch && searchMatch;
-            });
+            const filtered = getFilteredGrants();
 
             if (filtered.length === 0) {
                 container.innerHTML = '<div class="loading">No grants match your filters.</div>';
@@ -509,11 +810,195 @@
             });
         });
 
-        // Search
+        // Search with debounce
+        let searchTimeout;
         document.getElementById('searchBox').addEventListener('input', (e) => {
-            searchQuery = e.target.value;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value.trim();
+                renderGrants();
+            }, 300);
+        });
+
+        // Multi-select filter buttons
+        document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+                if (activeFilters.has(filter)) {
+                    activeFilters.delete(filter);
+                    btn.classList.remove('active');
+                } else {
+                    activeFilters.add(filter);
+                    btn.classList.add('active');
+                }
+                renderGrants();
+            });
+        });
+
+        // Saved searches
+        function renderSavedSearches() {
+            const container = document.getElementById('savedSearches');
+            if (!savedSearches.length) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            savedSearches.forEach((search, index) => {
+                html += `<button class="filter-btn saved-search ${activeSavedSearches.has(index) ? 'active' : ''}" data-saved-index="${index}" title="${search.query}">
+                    ${search.name}<span class="delete-tag" data-delete-index="${index}">&times;</span>
+                </button>`;
+            });
+            container.innerHTML = html;
+
+            container.querySelectorAll('.filter-btn.saved-search').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('delete-tag')) return;
+                    const index = parseInt(btn.dataset.savedIndex);
+
+                    if (activeSavedSearches.has(index)) {
+                        activeSavedSearches.delete(index);
+                        btn.classList.remove('active');
+                    } else {
+                        activeSavedSearches.add(index);
+                        btn.classList.add('active');
+                    }
+                    renderGrants();
+                });
+            });
+
+            container.querySelectorAll('.delete-tag').forEach(del => {
+                del.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const index = parseInt(del.dataset.deleteIndex);
+                    activeSavedSearches.delete(index);
+                    savedSearches.splice(index, 1);
+                    localStorage.setItem('grantping_saved_searches', JSON.stringify(savedSearches));
+                    const newActive = new Set();
+                    activeSavedSearches.forEach(i => {
+                        if (i > index) newActive.add(i - 1);
+                        else newActive.add(i);
+                    });
+                    activeSavedSearches = newActive;
+                    renderSavedSearches();
+                    renderGrants();
+                });
+            });
+        }
+
+        // Save search button
+        document.getElementById('saveSearchBtn').addEventListener('click', () => {
+            const currentSearch = document.getElementById('searchBox').value.trim();
+            if (!currentSearch) {
+                alert('Enter a search query first');
+                return;
+            }
+            savedSearches.push({ name: currentSearch, query: currentSearch });
+            localStorage.setItem('grantping_saved_searches', JSON.stringify(savedSearches));
+            const newIndex = savedSearches.length - 1;
+            activeSavedSearches.add(newIndex);
+            document.getElementById('searchBox').value = '';
+            searchQuery = '';
+            renderSavedSearches();
             renderGrants();
         });
+
+        // Alert modal
+        let pendingAlertData = null;
+        const alertModal = document.getElementById('alertModal');
+        const modalFilterSummary = document.getElementById('modalFilterSummary');
+
+        function showAlertModal(filterName, alertData) {
+            pendingAlertData = alertData;
+            modalFilterSummary.textContent = filterName;
+            alertModal.style.display = 'block';
+        }
+
+        function hideAlertModal() {
+            alertModal.style.display = 'none';
+            pendingAlertData = null;
+        }
+
+        document.getElementById('modalCancel').addEventListener('click', hideAlertModal);
+        alertModal.addEventListener('click', (e) => {
+            if (e.target === alertModal) hideAlertModal();
+        });
+
+        document.getElementById('modalConfirm').addEventListener('click', async () => {
+            if (!pendingAlertData) return;
+            const { filterName, ...data } = pendingAlertData;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/email-filters?s=${sessionToken}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    hideAlertModal();
+                    alert(`Alert saved! You'll receive daily emails when new grants match "${filterName}".`);
+                } else {
+                    const err = await response.json();
+                    alert(`Failed to save: ${err.error || 'Unknown error'}`);
+                }
+            } catch (e) {
+                console.error('Failed to save email filter:', e);
+                alert('Failed to save email filter. Please try again.');
+            }
+        });
+
+        // Add to alerts button
+        document.getElementById('addAlertBtn').addEventListener('click', () => {
+            if (!sessionToken) {
+                if (confirm('Subscribe to save email alerts and get notified when matching grants are published.')) {
+                    window.location.href = 'https://buy.stripe.com/eVq8wR1u83gGcVa7Cx97G06';
+                }
+                return;
+            }
+
+            const currentSearch = document.getElementById('searchBox').value.trim();
+            const allTerms = [currentSearch];
+            activeSavedSearches.forEach(idx => {
+                if (savedSearches[idx]) allTerms.push(savedSearches[idx].query);
+            });
+            const combinedSearch = allTerms.filter(Boolean).join(' ');
+
+            const hasKeywords = combinedSearch.length > 0;
+            const hasHigh = activeFilters.has('high');
+            const hasMedium = activeFilters.has('medium');
+            const hasLow = activeFilters.has('low');
+            const hasCategory = currentCategory !== 'all';
+
+            if (!hasKeywords && !hasHigh && !hasMedium && !hasLow && !hasCategory) {
+                alert('Please set at least one filter (search terms, competition level, or category)');
+                return;
+            }
+
+            const nameParts = [];
+            if (hasKeywords) nameParts.push(`"${combinedSearch}"`);
+            if (hasCategory) nameParts.push(currentCategory);
+            if (hasLow) nameParts.push('Low Competition');
+            if (hasMedium) nameParts.push('Medium Competition');
+            if (hasHigh) nameParts.push('High Competition');
+            const filterName = nameParts.join(' + ');
+
+            let competitionLevel = null;
+            if (hasLow) competitionLevel = 'Low';
+            else if (hasMedium) competitionLevel = 'Medium';
+            else if (hasHigh) competitionLevel = 'High';
+
+            showAlertModal(filterName, {
+                filterName,
+                name: filterName,
+                keywords: combinedSearch || null,
+                category: hasCategory ? currentCategory : null,
+                competition_level: competitionLevel
+            });
+        });
+
+        // Initialize saved searches
+        renderSavedSearches();
 
         // Mobile menu toggle
         function toggleMobileMenu() {
