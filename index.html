@@ -832,6 +832,7 @@
 
         function renderGrants() {
             const container = document.getElementById('grantsContainer');
+            container.classList.remove('loading'); // Remove loading class that adds padding
             const filtered = getFilteredGrants();
 
             if (filtered.length === 0) {
