@@ -128,7 +128,7 @@
         <div class="success-message" id="successMessage">
             <h2>You're all set!</h2>
             <p>We'll alert you when grants in your categories are posted.</p>
-            <p><a href="browse.html" style="color: #2d5a87;">Browse current grants</a></p>
+            <p><a href="/" style="color: #2d5a87;">Browse current grants</a></p>
         </div>
     </div>
 
@@ -286,7 +286,7 @@
                 // Redirect after 2 seconds
                 setTimeout(() => {
                     if (data.session_token) {
-                        window.location.href = `/browse.html?s=${data.session_token}`;
+                        window.location.href = `//?s=${data.session_token}`;
                     } else {
                         window.location.href = '/';
                     }

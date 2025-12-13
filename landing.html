@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrantPing - Federal Grant Alerts for Nonprofits & Universities</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* EasyPing Platform Bar */
+    .easyping-bar {
+      background: #1e293b;
+      color: white;
+      font-size: 0.75rem;
+      padding: 6px 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .easyping-bar a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .easyping-bar a:hover { opacity: 1; }
+    .easyping-bar a.active { opacity: 1; font-weight: 600; }
+    .easyping-brand { font-weight: 600; margin-right: 0.5rem; }
+    .easyping-sep { opacity: 0.4; }
+    .easyping-bar a.govping.active { border-bottom: 2px solid #2563eb; }
+    .easyping-bar a.regping.active { border-bottom: 2px solid #ea580c; }
+    .easyping-bar a.grantping.active { border-bottom: 2px solid #16a34a; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+      position: relative;
+    }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 16px; font-weight: 700; }
+    .hero .subtitle { font-size: 1.25rem; opacity: 0.9; margin-bottom: 32px; }
+    .hero .stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .hero .stat { text-align: center; }
+    .hero .stat-number { font-size: 2.5rem; font-weight: 700; }
+    .hero .stat-label { font-size: 0.9rem; opacity: 0.8; }
+
+    /* Value Props */
+    .value-props {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      padding: 60px 20px;
+      background: white;
+    }
+    .value-prop { text-align: center; padding: 20px; }
+    .value-prop h3 { margin-bottom: 8px; color: #1e3a5f; }
+    .value-prop p { color: #666; font-size: 0.95rem; }
+
+    /* Samples */
+    .samples { padding: 60px 20px; }
+    .samples h2 { text-align: center; margin-bottom: 40px; color: #1e3a5f; }
+    .sample-grid { display: grid; gap: 20px; }
+    .sample {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 24px;
+      transition: box-shadow 0.2s;
+    }
+    .sample:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .sample-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .sample-title { font-weight: 600; color: #1e3a5f; flex: 1; min-width: 200px; }
+    .sample-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .badge-low { background: #d4edda; color: #155724; }
+    .badge-medium { background: #fff3cd; color: #856404; }
+    .badge-high { background: #f8d7da; color: #721c24; }
+    .badge-large { background: #e7f1ff; color: #0056b3; }
+    .sample-dept { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+    .sample-summary { color: #444; margin-bottom: 12px; }
+    .sample-goodfor { font-size: 0.85rem; color: #666; }
+    .sample-goodfor strong { color: #1e3a5f; }
+
+    /* Pricing */
+    .pricing {
+      background: white;
+      padding: 60px 20px;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+    }
+    .pricing h2 { color: #1e3a5f; margin-bottom: 16px; }
+    .pricing .price { font-size: 3rem; font-weight: 700; color: #1e3a5f; }
+    .pricing .price span { font-size: 1.25rem; font-weight: 400; color: #666; }
+    .pricing .compare { color: #888; margin: 16px 0 32px; }
+    .cta-button {
+      display: inline-block;
+      background: #2d5a87;
+      color: white;
+      padding: 16px 48px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .cta-button:hover { background: #1e3a5f; }
+    .guarantee { margin-top: 16px; font-size: 0.9rem; color: #666; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .hero .stat-number { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- EasyPing Platform Bar -->
+  <div class="easyping-bar">
+    <span class="easyping-brand">EasyPing:</span>
+    <a href="https://govping.co" class="govping">GovPing</a>
+    <span class="easyping-sep">·</span>
+    <a href="https://regping.co" class="regping">RegPing</a>
+    <span class="easyping-sep">·</span>
+    <a href="https://grantping.co" class="grantping active">GrantPing</a>
+  </div>
+
+  <section class="hero">
+    <div style="position: absolute; top: 20px; right: 24px; display: flex; gap: 24px;">
+      <a href="/" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Browse Grants</a>
+      <a href="login.html" style="color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Login</a>
+    </div>
+    <div class="container">
+      <h1>GrantPing</h1>
+      <p class="subtitle">Federal grant opportunities delivered to your inbox, analyzed by AI</p>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">$500B+</div>
+          <div class="stat-label">In federal grants annually</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">Daily</div>
+          <div class="stat-label">Email alerts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">1,000+</div>
+          <div class="stat-label">Active opportunities</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="value-props">
+    <div class="container" style="display: contents;">
+      <div class="value-prop">
+        <h3>AI-Powered Analysis</h3>
+        <p>Claude AI analyzes every grant to identify who should apply, complexity level, and key requirements.</p>
+      </div>
+      <div class="value-prop">
+        <h3>Smart Matching</h3>
+        <p>Choose your focus areas (health, education, research, etc.) and get alerts only for relevant grants.</p>
+      </div>
+      <div class="value-prop">
+        <h3>Never Miss a Deadline</h3>
+        <p>Get instant alerts when matching grants are posted, plus optional daily digest emails.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="samples">
+    <div class="container">
+      <h2>Sample Grant Alerts</h2>
+      <div class="sample-grid">
+
+        <div class="sample">
+          <div class="sample-header">
+            <div class="sample-title">NIH HEAL Initiative PainCare Clinician Training Program</div>
+            <div class="sample-badges">
+              <span class="badge badge-high">High Competition</span>
+              <span class="badge badge-large">Large Grant</span>
+            </div>
+          </div>
+          <div class="sample-dept">National Institutes of Health · CFDA 93.279</div>
+          <div class="sample-summary">This NIH grant supports training programs for healthcare clinicians in evidence-based pain management and opioid prescribing practices. Funding available for educational institutions to develop comprehensive training curricula.</div>
+          <div class="sample-goodfor"><strong>Good for:</strong> Medical schools, Nursing programs, Academic medical centers, Healthcare training organizations</div>
+        </div>
+
+        <div class="sample">
+          <div class="sample-header">
+            <div class="sample-title">Research Experiences for Teachers (RET) in Engineering</div>
+            <div class="sample-badges">
+              <span class="badge badge-high">High Competition</span>
+              <span class="badge badge-large">Large Grant</span>
+            </div>
+          </div>
+          <div class="sample-dept">National Science Foundation · CFDA 47.070</div>
+          <div class="sample-summary">NSF funding to engage K-12 STEM teachers in engineering research experiences and translate research into classroom activities. Awards support summer research plus academic year follow-up.</div>
+          <div class="sample-goodfor"><strong>Good for:</strong> Research universities with engineering programs, School districts partnering with universities, STEM education nonprofits</div>
+        </div>
+
+        <div class="sample">
+          <div class="sample-header">
+            <div class="sample-title">SEEDING CRITICAL ADVANCES FOR LEADING ENERGY TECHNOLOGIES</div>
+            <div class="sample-badges">
+              <span class="badge badge-medium">Medium Competition</span>
+              <span class="badge badge-large">Large Grant</span>
+            </div>
+          </div>
+          <div class="sample-dept">Department of Energy · CFDA 81.087</div>
+          <div class="sample-summary">DOE funding for early-stage energy technology research and development. Supports innovative approaches to renewable energy, energy storage, and grid modernization.</div>
+          <div class="sample-goodfor"><strong>Good for:</strong> Research universities, National labs, Clean energy startups, Engineering research institutions</div>
+        </div>
+
+        <div class="sample">
+          <div class="sample-header">
+            <div class="sample-title">Occupational Safety and Health Education and Research Centers</div>
+            <div class="sample-badges">
+              <span class="badge badge-high">High Competition</span>
+              <span class="badge badge-large">Large Grant</span>
+            </div>
+          </div>
+          <div class="sample-dept">CDC · CFDA 93.262</div>
+          <div class="sample-summary">CDC funding to establish education and research centers focused on occupational safety and health. Supports graduate-level training programs and research in workplace safety.</div>
+          <div class="sample-goodfor"><strong>Good for:</strong> Schools of public health, Academic medical centers, Universities with occupational health programs</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <h2>Simple Pricing</h2>
+      <p style="color: #666; margin-bottom: 24px;">Browse grants for free. Subscribe for personalized daily alerts.</p>
+
+      <div class="price">$29<span>/month</span></div>
+      <p class="compare">Much cheaper than grant research services ($500-2000/year)</p>
+
+      <div style="margin-top: 32px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/" class="cta-button" style="background: #f5f5f5; color: #1e3a5f;">Browse Free</a>
+        <a href="https://buy.stripe.com/eVq8wR1u83gGcVa7Cx97G06" class="cta-button">Get Daily Alerts</a>
+      </div>
+
+      <p style="color: #888; font-size: 0.9rem; margin-top: 16px;">Already subscribed? <a href="login.html" style="color: #2d5a87;">Login here</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Questions? Email hello@grantping.co</p>
+  </footer>
+</body>
+</html>
