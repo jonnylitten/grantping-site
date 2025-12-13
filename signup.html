@@ -134,13 +134,28 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const editToken = urlParams.get('token');
+        let editToken = urlParams.get('token');
         const signupToken = urlParams.get('signup');
+        const sessionToken = urlParams.get('s');
 
         const API_BASE = 'https://grantping-production.up.railway.app';
 
-        // If no token at all, show "check your email" message
-        if (!editToken && !signupToken) {
+        // If we have a session token but no edit token, fetch the edit token
+        if (sessionToken && !editToken && !signupToken) {
+            fetch(`${API_BASE}/api/account?s=${sessionToken}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.edit_token) {
+                        // Redirect with the proper edit token
+                        window.location.href = `/signup.html?token=${data.edit_token}`;
+                    } else {
+                        showCheckEmailMessage();
+                    }
+                })
+                .catch(() => showCheckEmailMessage());
+        }
+
+        function showCheckEmailMessage() {
             document.getElementById('formCard').innerHTML = `
                 <div style="text-align: center; padding: 40px 20px;">
                     <h2 style="color: #1e3a5f; margin-bottom: 16px;">Check Your Email</h2>
@@ -153,6 +168,11 @@
                     <a href="/" style="display: inline-block; margin-top: 24px; color: #2d5a87;">← Back to home</a>
                 </div>
             `;
+        }
+
+        // If no token at all, show "check your email" message
+        if (!editToken && !signupToken && !sessionToken) {
+            showCheckEmailMessage();
         }
 
         // New signup from Stripe - validate token first
