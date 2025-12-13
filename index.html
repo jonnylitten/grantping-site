@@ -13,32 +13,59 @@
         })();
     </script>
     <style>
+        /* App-specific layout styles */
         :root {
+            --primary: #166534;
+            --primary-dark: #14532d;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --bg: #ffffff;
-            --bg-secondary: #f5f5f5;
-            --text: #1a1a1a;
-            --text-secondary: #6b7280;
-            --border: #e5e7eb;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --bg-secondary: #f8fafc;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
         }
+
+        /* Dark Theme */
         [data-theme="dark"] {
+            --primary: #4ade80;
+            --primary-dark: #22c55e;
+            --secondary: #9ca3af;
+            --success: #34d399;
+            --danger: #f87171;
+            --warning: #fbbf24;
             --bg: #1e1e1e;
             --bg-secondary: #121212;
-            --text: #f0f0f0;
-            --text-secondary: #a0a0a0;
-            --border: #333;
-            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --border: #333333;
+            --text: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
         }
+
+        /* System preference when theme is "system" */
         @media (prefers-color-scheme: dark) {
             [data-theme="system"] {
+                --primary: #4ade80;
+                --primary-dark: #22c55e;
+                --secondary: #9ca3af;
+                --success: #34d399;
+                --danger: #f87171;
+                --warning: #fbbf24;
                 --bg: #1e1e1e;
                 --bg-secondary: #121212;
-                --text: #f0f0f0;
-                --text-secondary: #a0a0a0;
-                --border: #333;
-                --shadow: 0 1px 3px rgba(0,0,0,0.3);
+                --border: #333333;
+                --text: #e5e5e5;
+                --text-secondary: #a3a3a3;
+                --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+                --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
             }
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -48,7 +75,9 @@
         }
 
         /* Layout */
-        .layout { display: flex; min-height: 100vh; }
+        body { background: var(--bg-secondary); }
+
+        .app-layout { display: flex; min-height: 100vh; }
 
         /* Sidebar */
         .sidebar {
@@ -169,7 +198,7 @@
         .settings-link:hover { opacity: 1; background: rgba(255,255,255,0.1); }
 
         /* Main Content */
-        .main {
+        .app-main {
             flex: 1;
             margin-left: 280px;
             padding: 24px;
@@ -181,61 +210,69 @@
             padding: 16px;
             border-radius: 0.75rem;
             margin-bottom: 24px;
-            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             gap: 12px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+
         .controls-row {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             align-items: center;
             flex-wrap: wrap;
         }
+
         .search-wrapper {
             position: relative;
             flex: 1;
-            min-width: 200px;
         }
+
         .search-box {
             width: 100%;
             padding: 12px 16px;
-            padding-right: 36px;
+            padding-right: 40px;
             border: 1px solid var(--border);
             border-radius: 0.5rem;
             font-size: 1rem;
+            height: 46px;
             background: var(--bg);
             color: var(--text);
         }
-        .search-box:focus { outline: none; border-color: #166534; }
+        .search-box:focus { outline: none; border-color: var(--primary); }
+        .search-box::placeholder { color: var(--text-secondary); }
 
         /* Search Help Tooltip */
         .search-help-icon {
             position: absolute;
-            right: 10px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: #166534;
-            font-size: 18px;
+            color: var(--primary);
+            font-size: 20px;
             cursor: help;
             opacity: 0.6;
             transition: opacity 0.2s;
         }
         .search-help-icon:hover { opacity: 1; }
+
         .search-help-tooltip {
             display: none;
             position: absolute;
             right: 0;
-            top: 32px;
+            top: 36px;
             background: var(--bg);
             color: var(--text);
-            padding: 14px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 0.5rem;
             border: 1px solid var(--border);
             font-size: 13px;
             line-height: 1.7;
-            width: 300px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 320px;
+            box-shadow: var(--shadow-lg);
             z-index: 1000;
         }
         .search-help-icon:hover .search-help-tooltip { display: block; }
@@ -244,22 +281,22 @@
             padding: 2px 6px;
             border-radius: 3px;
             font-family: monospace;
-            color: #166534;
+            color: var(--danger);
         }
 
         /* Filter Buttons */
         .filter-btn {
-            padding: 6px 12px;
+            padding: 8px 14px;
             border: 1px solid var(--border);
             background: var(--bg);
             color: var(--text);
             border-radius: 9999px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             transition: all 0.2s;
         }
-        .filter-btn:hover { background: var(--bg-secondary); border-color: #166534; }
-        .filter-btn.active { background: #166534; color: white; border-color: #166534; }
+        .filter-btn:hover { background: var(--bg-secondary); border-color: var(--primary); }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* Competition level button colors */
         .filter-btn[data-filter="high"] { border-color: rgba(239, 68, 68, 0.4); }
@@ -290,14 +327,23 @@
             [data-theme="system"] .filter-btn[data-filter="low"].active { background: #166534; }
         }
 
-        .filter-btn.saved-search { background: var(--bg-secondary); }
-        .filter-btn.saved-search.active { background: #166534; color: white; border-color: #166534; }
+        .filter-btn.saved-search {
+            background: var(--bg-secondary);
+            border-color: var(--secondary);
+        }
+        .filter-btn.saved-search.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
         .filter-btn .delete-tag {
             margin-left: 6px;
             opacity: 0.6;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
         }
         .filter-btn .delete-tag:hover { opacity: 1; }
+
+        #savedSearches:empty { display: none; }
 
         .filter-divider {
             width: 1px;
@@ -307,18 +353,18 @@
         }
 
         .save-search-btn {
-            padding: 6px 12px;
+            padding: 8px 12px;
             border: 1px dashed var(--border);
             background: var(--bg);
             border-radius: 9999px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             transition: all 0.2s;
         }
         .save-search-btn:hover {
-            border-color: #166534;
-            color: #166534;
+            border-color: var(--primary);
+            color: var(--primary);
             background: var(--bg-secondary);
         }
         .save-search-btn.alert-btn {
@@ -326,16 +372,22 @@
             background: var(--bg-secondary);
         }
         .save-search-btn.alert-btn:hover {
-            border-color: #22c55e;
-            color: #22c55e;
+            border-color: var(--success);
+            color: var(--success);
         }
+
+        /* Green outline on controls when hovering alert button */
+        .controls:has(.alert-btn:hover) {
+            outline: 2px solid var(--success);
+            outline-offset: -2px;
+        }
+
         [data-theme="dark"] .save-search-btn.alert-btn { background: #1e1e1e; }
         @media (prefers-color-scheme: dark) {
             [data-theme="system"] .save-search-btn.alert-btn { background: #1e1e1e; }
         }
 
-        #savedSearches:empty { display: none; }
-        .results-count { color: var(--text-secondary); font-size: 0.85rem; }
+        .results-count { color: var(--text-secondary); font-size: 0.9rem; }
 
         /* Alert Modal */
         .modal-overlay {
@@ -395,6 +447,7 @@
             grid-template-columns: 1fr;
             gap: 12px;
         }
+
         @media (min-width: 1400px) {
             .grants-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -441,17 +494,22 @@
         .card-goodfor { font-size: 0.875rem; color: var(--text-secondary); }
         .card-goodfor strong { color: #166534; }
 
-        /* Dark mode card overrides */
-        [data-theme="dark"] .card-title { color: #f0f0f0; }
-        [data-theme="dark"] .card-goodfor strong { color: #4ade80; }
+        /* Dark mode overrides */
+        [data-theme="dark"] .sidebar { background: #15803d; }
+        [data-theme="dark"] .card-title,
+        [data-theme="dark"] .card-goodfor strong,
+        [data-theme="dark"] .search-help-icon { color: #f0f0f0; }
         [data-theme="dark"] .grant-card { border-color: #404040; }
         [data-theme="dark"] .badge-low { background: #166534; color: #dcfce7; }
         [data-theme="dark"] .badge-medium { background: #92400e; color: #fef3c7; }
         [data-theme="dark"] .badge-high { background: #991b1b; color: #fee2e2; }
         [data-theme="dark"] .badge-funding { background: #1e40af; color: #dbeafe; }
+
         @media (prefers-color-scheme: dark) {
-            [data-theme="system"] .card-title { color: #f0f0f0; }
-            [data-theme="system"] .card-goodfor strong { color: #4ade80; }
+            [data-theme="system"] .sidebar { background: #15803d; }
+            [data-theme="system"] .card-title,
+            [data-theme="system"] .card-goodfor strong,
+            [data-theme="system"] .search-help-icon { color: #f0f0f0; }
             [data-theme="system"] .grant-card { border-color: #404040; }
             [data-theme="system"] .badge-low { background: #166534; color: #dcfce7; }
             [data-theme="system"] .badge-medium { background: #92400e; color: #fef3c7; }
@@ -465,45 +523,81 @@
         /* Mobile menu */
         .mobile-header {
             display: none;
-            background: #1e3a5f;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #166534;
             color: white;
-            padding: 16px 20px;
             position: sticky;
             top: 0;
-            z-index: 200;
+            z-index: 99;
         }
-        .mobile-header h1 { font-size: 1.25rem; }
-        .mobile-menu-btn {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
+        .mobile-header h1 { font-size: 1.2rem; margin: 0; }
+
+        .hamburger {
             background: none;
             border: none;
             color: white;
-            font-size: 24px;
+            font-size: 1.5rem;
             cursor: pointer;
+            padding: 4px 8px;
         }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .overlay.show { display: block; }
 
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
                 left: -280px;
                 transition: left 0.3s;
-                z-index: 300;
+                z-index: 1000;
             }
-            .sidebar.mobile-open { left: 0; }
-            .main { margin-left: 0; }
-            .mobile-header { display: block; }
+            .sidebar.open { left: 0; }
+
+            .app-main { margin-left: 0; padding: 12px; }
+
+            .mobile-header { display: flex; }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 12px;
+                position: static;
+            }
+            .search-wrapper { width: 100%; }
+            .search-box { width: 100% !important; }
+            .filter-btn { flex: 0 0 auto; font-size: 0.8rem; padding: 8px 12px; white-space: nowrap; }
+            .save-search-btn.alert-btn { margin-left: 0 !important; }
+
+            .grant-card { padding: 14px; }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-header { display: none; }
         }
     </style>
 </head>
 <body>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Mobile Header -->
     <div class="mobile-header">
+        <button class="hamburger" id="menuBtn">&#9776;</button>
         <h1>GrantP<span class="ping-i">i</span>ng 🎄</h1>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
     </div>
-    <div class="layout">
+
+    <div class="app-layout">
         <aside class="sidebar" id="sidebar">
             <div class="logo-dropdown">
                 <h1 class="logo-trigger">GrantP<span class="ping-i">i</span>ng <span class="dropdown-caret">▾</span> 🎄</h1>
@@ -560,7 +654,7 @@
             </div>
         </aside>
 
-        <main class="main">
+        <main class="app-main">
             <div class="controls">
                 <div class="controls-row">
                     <div class="search-wrapper">
@@ -1001,9 +1095,14 @@
         renderSavedSearches();
 
         // Mobile menu toggle
-        function toggleMobileMenu() {
-            document.getElementById('sidebar').classList.toggle('mobile-open');
-        }
+        document.getElementById('menuBtn')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('overlay').classList.add('show');
+        });
+        document.getElementById('overlay')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+        });
 
         // Load grants on page load
         loadGrants();
