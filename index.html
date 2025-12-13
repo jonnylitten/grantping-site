@@ -196,8 +196,14 @@
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section-title">Account</div>
-            <a href="/signup.html" class="settings-link" id="editPrefsLink">Edit Preferences</a>
-            <a href="/" class="settings-link">← Back to Home</a>
+            <div id="nav-logged-out">
+                <a href="https://buy.stripe.com/eVq8wR1u83gGcVa7Cx97G06" class="settings-link">Get Daily Alerts</a>
+                <a href="login.html" class="settings-link">Already subscribed?</a>
+            </div>
+            <div id="nav-logged-in" style="display: none;">
+                <a href="/signup.html" class="settings-link" id="editPrefsLink">Edit Preferences</a>
+                <a href="/" class="settings-link" id="logout-link">Logout</a>
+            </div>
         </aside>
 
         <main class="main">
@@ -342,8 +348,13 @@
         // Load grants on page load
         loadGrants();
 
-        // Set edit preferences link
-        if (sessionToken) {
+        const IS_AUTHENTICATED = !!sessionToken;
+
+        // Update nav based on auth state
+        if (IS_AUTHENTICATED) {
+            document.getElementById('nav-logged-out').style.display = 'none';
+            document.getElementById('nav-logged-in').style.display = 'block';
+
             localStorage.setItem('grantping_session', sessionToken);
 
             // Fetch account info to get edit token
@@ -354,8 +365,21 @@
                         document.getElementById('editPrefsLink').href = `/signup.html?token=${data.edit_token}`;
                     }
                 })
-                .catch(err => console.error('Failed to load account:', err));
+                .catch(err => {
+                    console.error('Failed to load account:', err);
+                    // Session may be expired - reset nav
+                    localStorage.removeItem('grantping_session');
+                    document.getElementById('nav-logged-out').style.display = 'block';
+                    document.getElementById('nav-logged-in').style.display = 'none';
+                });
         }
+
+        // Logout handler
+        document.getElementById('logout-link')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('grantping_session');
+            window.location.href = '/';
+        });
     </script>
 </body>
 </html>
