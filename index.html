@@ -214,12 +214,14 @@
             padding: 1.25rem;
             box-shadow: var(--shadow);
             transition: box-shadow 0.2s, transform 0.15s;
+            text-align: left;
         }
         .grant-card:hover {
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             transform: translateY(-2px);
         }
         .grant-card.hidden { display: none; }
+        .card-header { margin-bottom: 8px; }
         .card-title {
             color: #166534;
             font-weight: 600;
@@ -470,18 +472,14 @@
                 return `
                     <div class="grant-card">
                         <div class="card-header">
-                            <a href="${grantUrl}" target="_blank" class="card-title" style="text-decoration: none;">${title}</a>
+                            <a href="${grantUrl}" target="_blank" class="card-title">${title}</a>
+                            <div class="card-badges">
+                                ${compBadge}
+                                ${fundingBadge}
+                            </div>
                         </div>
-                        <div class="card-badges">
-                            ${compBadge}
-                            ${fundingBadge}
-                        </div>
-                        <div class="card-meta">
-                            ${grant.agency_name} • Posted: ${formatDate(grant.post_date)} • Close: ${grant.close_date ? formatDate(grant.close_date) : 'Rolling'}
-                        </div>
-                        <div class="card-summary">
-                            ${grant.summary || 'No summary available.'}
-                        </div>
+                        <div class="card-meta">${grant.agency_name} • Posted: ${formatDate(grant.post_date)} • Close: ${grant.close_date ? formatDate(grant.close_date) : 'Rolling'}</div>
+                        <div class="card-summary">${grant.summary || 'No summary available.'}</div>
                         ${goodFor ? `<div class="card-goodfor"><strong>Good for:</strong> ${goodFor}</div>` : ''}
                     </div>
                 `;
