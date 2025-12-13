@@ -145,12 +145,22 @@
                     </div>
                 </div>
 
+                <!-- Saved Email Filters (shown only in edit mode) -->
+                <div class="form-section" id="emailFiltersSection" style="display: none;">
+                    <h3>Your Saved Search Filters</h3>
+                    <p style="font-size: 0.85rem; color: #888; margin-bottom: 12px;">These custom filters add extra grants to your daily digest (beyond your category selections).</p>
+                    <div id="emailFiltersList"></div>
+                    <p style="font-size: 0.8rem; color: #888; margin-top: 8px;">
+                        <a href="/" style="color: #166534;">Browse grants</a> to create new search filters.
+                    </p>
+                </div>
+
                 <div class="form-section">
-                    <h3>Delivery Preferences</h3>
+                    <h3>Delivery</h3>
                     <div class="feed-list">
-                        <label class="feed-item"><input type="checkbox" name="delivery" value="instant" id="wantsInstant" checked><span>Instant alerts (when new grants match)</span></label>
-                        <label class="feed-item"><input type="checkbox" name="delivery" value="daily" id="wantsDaily"><span>Daily digest (8am ET)</span></label>
+                        <label class="feed-item" style="background: #f0fdf4; border-color: #16a34a;"><input type="checkbox" name="delivery" value="daily" id="wantsDaily" checked disabled style="pointer-events: none;"><span>Daily digest (8am ET)</span></label>
                     </div>
+                    <input type="hidden" id="wantsInstant" value="false">
                 </div>
 
                 <div class="form-section">
@@ -172,7 +182,7 @@
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">Start Receiving Alerts</button>
-                <p class="hint">Select at least one category and delivery method.</p>
+                <p class="hint">Select at least one category to receive your daily digest.</p>
             </form>
         </div>
 
@@ -278,13 +288,76 @@
                         }
                     });
 
-                    // Load delivery preferences
-                    document.getElementById('wantsInstant').checked = data.wants_instant !== false;
-                    document.getElementById('wantsDaily').checked = data.wants_daily === true;
-                    document.querySelectorAll('input[name="delivery"]').forEach(cb => {
-                        cb.closest('.feed-item').classList.toggle('selected', cb.checked);
-                    });
+                    // Daily digest is always enabled (instant alerts disabled)
+                    // No need to set delivery preferences as they are fixed
                 });
+
+            // Load email filters
+            loadEmailFilters();
+        }
+
+        // Email filters management
+        async function loadEmailFilters() {
+            try {
+                const response = await fetch(`${API_BASE}/api/email-filters?token=${editToken}`);
+                if (!response.ok) return;
+
+                const data = await response.json();
+                const filters = data.filters || [];
+
+                document.getElementById('emailFiltersSection').style.display = 'block';
+                renderEmailFilters(filters);
+            } catch (e) {
+                console.error('Failed to load email filters:', e);
+            }
+        }
+
+        function renderEmailFilters(filters) {
+            const container = document.getElementById('emailFiltersList');
+            if (filters.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 16px; text-align: center; color: #888; font-size: 0.9rem; background: #f9f9f9; border-radius: 8px;">
+                        No custom alerts yet. <a href="/" style="color: #166534;">Browse grants</a> and use "Save filters as alert" to create one.
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = filters.map(f => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; margin-bottom: 8px;">
+                    <div style="flex: 1;">
+                        <strong style="color: #166534;">📧 ${escapeHtml(f.name)}</strong>
+                    </div>
+                    <button type="button" onclick="deleteEmailFilter(${f.id})" style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 4px 8px; font-size: 0.875rem;">
+                        ✕ Remove
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function deleteEmailFilter(filterId) {
+            if (!confirm('Remove this search filter from your email alerts?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/email-filters/${filterId}?token=${editToken}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadEmailFilters();
+                } else {
+                    const err = await response.json();
+                    alert(`Failed to delete: ${err.error || 'Unknown error'}`);
+                }
+            } catch (e) {
+                console.error('Failed to delete filter:', e);
+                alert('Failed to delete filter. Please try again.');
+            }
         }
 
         document.querySelectorAll('.feed-item input').forEach(cb => {
@@ -304,18 +377,12 @@
 
             const formData = new FormData(e.target);
             const categories = formData.getAll('categories');
-            const wantsInstant = document.getElementById('wantsInstant').checked;
-            const wantsDaily = document.getElementById('wantsDaily').checked;
+            // Daily digest only (instant alerts disabled)
+            const wantsInstant = false;
+            const wantsDaily = true;
 
             if (categories.length === 0) {
                 alert('Please select at least one category');
-                btn.disabled = false;
-                btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
-                return;
-            }
-
-            if (!wantsInstant && !wantsDaily) {
-                alert('Please select at least one delivery method');
                 btn.disabled = false;
                 btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
                 return;
