@@ -77,7 +77,40 @@
         .success-message h2 { color: #155724; margin-bottom: 12px; }
         .success-message p { color: #666; margin-bottom: 8px; }
         .hint { font-size: 0.85rem; color: #888; margin-top: 16px; text-align: center; }
+        .theme-toggle { display: flex; gap: 0.5rem; }
+        .theme-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .theme-option:hover {
+            border-color: #166534;
+            background: #f0fdf4;
+        }
+        .theme-option input { display: none; }
+        .theme-option input:checked + span {
+            color: #166534;
+            font-weight: 600;
+        }
+        .theme-option:has(input:checked) {
+            border-color: #166534;
+            background: #f0fdf4;
+        }
     </style>
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const theme = localStorage.getItem('grantping_theme') || 'system';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
@@ -117,6 +150,24 @@
                     <div class="feed-list">
                         <label class="feed-item"><input type="checkbox" name="delivery" value="instant" id="wantsInstant" checked><span>Instant alerts (when new grants match)</span></label>
                         <label class="feed-item"><input type="checkbox" name="delivery" value="daily" id="wantsDaily"><span>Daily digest (8am ET)</span></label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Theme</h3>
+                    <div class="theme-toggle">
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="light">
+                            <span>Light</span>
+                        </label>
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="dark">
+                            <span>Dark</span>
+                        </label>
+                        <label class="theme-option">
+                            <input type="radio" name="theme" value="system">
+                            <span>System</span>
+                        </label>
                     </div>
                 </div>
 
@@ -318,6 +369,24 @@
                 btn.textContent = editToken ? 'Save Changes' : 'Start Receiving Alerts';
             }
         });
+
+        // Theme handling
+        function initTheme() {
+            const savedTheme = localStorage.getItem('grantping_theme') || 'system';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const radio = document.querySelector(`input[name="theme"][value="${savedTheme}"]`);
+            if (radio) radio.checked = true;
+        }
+
+        document.querySelectorAll('input[name="theme"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const theme = e.target.value;
+                localStorage.setItem('grantping_theme', theme);
+                document.documentElement.setAttribute('data-theme', theme);
+            });
+        });
+
+        initTheme();
     </script>
 </body>
 </html>

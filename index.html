@@ -167,18 +167,6 @@
         }
         .settings-link:hover { opacity: 1; background: rgba(255,255,255,0.1); }
 
-        .theme-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            padding: 6px 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-        .theme-btn:hover { background: rgba(255,255,255,0.2); }
-        .theme-btn.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-
         /* Main Content */
         .main {
             flex: 1;
@@ -335,13 +323,6 @@
             </a>
 
             <div class="sidebar-divider"></div>
-
-            <div class="sidebar-section-title">Theme</div>
-            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-                <button class="theme-btn" data-theme="light" title="Light">☀️</button>
-                <button class="theme-btn" data-theme="dark" title="Dark">🌙</button>
-                <button class="theme-btn" data-theme="system" title="System">💻</button>
-            </div>
 
             <div class="sidebar-section-title">Account</div>
             <div id="nav-logged-out">
@@ -511,25 +492,6 @@
         function toggleMobileMenu() {
             document.getElementById('sidebar').classList.toggle('mobile-open');
         }
-
-        // Theme toggle
-        function setTheme(theme) {
-            localStorage.setItem('grantping_theme', theme);
-            document.documentElement.setAttribute('data-theme', theme);
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.theme === theme);
-            });
-        }
-
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.addEventListener('click', () => setTheme(btn.dataset.theme));
-        });
-
-        // Set initial active state
-        const currentTheme = localStorage.getItem('grantping_theme') || 'system';
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.theme === currentTheme);
-        });
 
         // Load grants on page load
         loadGrants();
