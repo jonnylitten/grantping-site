@@ -226,6 +226,14 @@
         let currentCategory = 'all';
         let searchQuery = '';
 
+        // Format date as MM-DD-YYYY
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[1]}-${parts[2]}-${parts[0]}`;
+        }
+
         // Fetch grants from backend
         async function loadGrants() {
             try {
@@ -295,7 +303,7 @@
                             ${fundingBadge}
                         </div>
                         <div class="card-meta">
-                            ${grant.agency_name} • Posted: ${grant.post_date || 'N/A'} • Close: ${grant.close_date || 'Rolling'}
+                            ${grant.agency_name} • Posted: ${formatDate(grant.post_date)} • Close: ${grant.close_date ? formatDate(grant.close_date) : 'Rolling'}
                         </div>
                         <div class="card-summary">
                             ${grant.summary || 'No summary available.'}
